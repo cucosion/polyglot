@@ -3,7 +3,7 @@ package me.dinowernli.grpc.polyglot.config;
 import static com.google.common.truth.Truth.assertThat;
 
 import com.google.common.collect.ImmutableMultimap;
-import me.dinowernli.junit.TestClass;
+//import me.dinowernli.junit.TestClass;
 
 import java.nio.file.Files;
 import java.nio.file.Path;
@@ -21,7 +21,7 @@ import com.google.common.collect.ImmutableList;
 import org.junit.rules.TemporaryFolder;
 
 /** Unit tests for {@link CommandLineArgs}. */
-@TestClass
+//@TestClass
 public class CommandLineArgsTest {
   @Rule public TemporaryFolder tempFolder = new TemporaryFolder();
   private Path tempFile1;

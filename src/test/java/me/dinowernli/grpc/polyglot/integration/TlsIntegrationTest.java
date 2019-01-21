@@ -12,7 +12,7 @@ import com.google.common.collect.ImmutableList;
 import me.dinowernli.grpc.polyglot.io.MessageWriter;
 import me.dinowernli.grpc.polyglot.testing.TestServer;
 import me.dinowernli.grpc.polyglot.testing.TestUtils;
-import me.dinowernli.junit.TestClass;
+//import me.dinowernli.junit.TestClass;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Rule;
@@ -27,7 +27,7 @@ import static me.dinowernli.grpc.polyglot.testing.TestUtils.makeArgument;
 /**
  * An integration test suite which tests Polyglot's ability to connect to servers using TLS.
  */
-@TestClass
+//@TestClass
 public class TlsIntegrationTest {
   private static final String TEST_UNARY_METHOD = "polyglot.test.TestService/TestMethod";
 

@@ -3,7 +3,7 @@ package me.dinowernli.grpc.polyglot.grpc;
 import static org.mockito.Mockito.doThrow;
 import static org.mockito.Mockito.verify;
 
-import me.dinowernli.junit.TestClass;
+//import me.dinowernli.junit.TestClass;
 import org.junit.Before;
 import org.junit.Rule;
 import org.junit.Test;
@@ -15,7 +15,7 @@ import io.grpc.stub.StreamObserver;
 
 
 /** Unit tests for {@link CompositeStreamObserver}. */
-@TestClass
+//@TestClass
 public class CompositeStreamObserverTest {
   @Rule public MockitoRule mockitoJunitRule = MockitoJUnit.rule();
   @Mock private StreamObserver<SomeType> mockFirstObserver;

@@ -16,7 +16,7 @@ import me.dinowernli.grpc.polyglot.io.MessageWriter;
 import me.dinowernli.grpc.polyglot.testing.RecordingTestService;
 import me.dinowernli.grpc.polyglot.testing.TestServer;
 import me.dinowernli.grpc.polyglot.testing.TestUtils;
-import me.dinowernli.junit.TestClass;
+//import me.dinowernli.junit.TestClass;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Rule;
@@ -31,7 +31,7 @@ import static me.dinowernli.grpc.polyglot.testing.TestUtils.makeArgument;
 /**
  * An integration test suite which has the Polyglot client talk to a server which records requests.
  */
-@TestClass
+//@TestClass
 public class ClientServerIntegrationTest {
   private static final String TEST_UNARY_METHOD = "polyglot.test.TestService/TestMethod";
   private static final String TEST_STREAM_METHOD = "polyglot.test.TestService/TestMethodStream";

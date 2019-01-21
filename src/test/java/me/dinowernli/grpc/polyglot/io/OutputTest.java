@@ -1,10 +1,11 @@
 package me.dinowernli.grpc.polyglot.io;
 
 import com.google.common.io.Files;
-import me.dinowernli.junit.TestClass;
+//import me.dinowernli.junit.TestClass;
 import org.junit.Rule;
 import org.junit.Test;
 import org.junit.rules.TemporaryFolder;
+import org.junit.runners.model.TestClass;
 import polyglot.ConfigProto.OutputConfiguration;
 import polyglot.ConfigProto.OutputConfiguration.Destination;
 
@@ -16,7 +17,7 @@ import java.nio.file.Paths;
 import static com.google.common.truth.Truth.assertThat;
 
 /** Unit tests for {@link Output}. */
-@TestClass
+//@TestClass
 public class OutputTest {
   @Rule public TemporaryFolder tempFolder = new TemporaryFolder();
 

@@ -5,7 +5,7 @@ import java.util.Optional;
 
 import com.google.common.collect.ImmutableList;
 import com.google.common.collect.ImmutableMultimap;
-import me.dinowernli.junit.TestClass;
+//import me.dinowernli.junit.TestClass;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Rule;
@@ -23,7 +23,7 @@ import static com.google.common.truth.Truth.assertThat;
 import static org.mockito.Mockito.when;
 
 /** Unit tests for {@link ConfigurationLoader}. */
-@TestClass
+//@TestClass
 public class ConfigurationLoaderTest {
   @Rule public TemporaryFolder tempDirectory = new TemporaryFolder();
   @Rule public MockitoRule mockitoJunitRule = MockitoJUnit.rule();

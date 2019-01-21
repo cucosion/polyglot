@@ -7,7 +7,7 @@ import io.grpc.CallOptions;
 import io.grpc.Channel;
 import io.grpc.ClientCall;
 import io.grpc.stub.StreamObserver;
-import me.dinowernli.junit.TestClass;
+//import me.dinowernli.junit.TestClass;
 import org.junit.Before;
 import org.junit.Rule;
 import org.junit.Test;
@@ -27,7 +27,7 @@ import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
 /** Unit tests for {@link DynamicGrpcClient}. */
-@TestClass
+//@TestClass
 public class DynamicGrpcClientTest {
   private static final CallOptions CALL_OPTIONS =
       CallOptions.DEFAULT.withDeadlineAfter(1234L, TimeUnit.NANOSECONDS);

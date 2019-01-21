@@ -11,7 +11,7 @@ import com.google.protobuf.DynamicMessage;
 import com.google.protobuf.Message;
 import com.google.protobuf.util.JsonFormat;
 import com.google.protobuf.util.JsonFormat.TypeRegistry;
-import me.dinowernli.junit.TestClass;
+//import me.dinowernli.junit.TestClass;
 import me.dinowernli.grpc.polyglot.io.testing.TestData;
 import me.dinowernli.grpc.polyglot.testing.RecordingOutput;
 import me.dinowernli.grpc.polyglot.testing.TestUtils;
@@ -23,7 +23,7 @@ import polyglot.test.TestProto.TunnelMessage;
 import static com.google.common.truth.Truth.assertThat;
 
 /** Unit tests for {@link MessageWriter}. */
-@TestClass
+//@TestClass
 public class MessageWriterTest {
   private static final String TESTDATA_ROOT = Paths.get(TestUtils.getWorkspaceRoot().toString(),
       "src", "test", "java", "me", "dinowernli", "grpc", "polyglot", "io", "testdata").toString();
