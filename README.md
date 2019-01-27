@@ -1,6 +1,6 @@
 # Polyglot - a universal grpc command line client
 
-[![Build Status](https://travis-ci.org/grpc-ecosystem/polyglot.svg?branch=master)](https://travis-ci.org/grpc-ecosystem/polyglot)
+[![Build Status](https://ci.ing.net/ipa/ipabuilds/jenkins/buildStatus/icon?job=polyglot/develop)](https://ci.ing.net/ipa/ipabuilds/jenkins/job/polyglot/job/develop/)
 
 Polyglot is a grpc client which can talk to any grpc server. In order to make a call, the following are required:
 * A compiled Polyglot binary, 
@@ -144,6 +144,19 @@ $ java -jar polyglot.jar \
 
 The printed services can be filtered using `--service_filter=<service_name>` or `--method_filter=<method_name>`, and the `--with_message` flag can be used to also print the exact format of the requests.
 
+### Listing services and available information using reflection
+
+Polyglot supports printing a list of all the discovered services using the `list_services_reflection` command. This command can be invoked as follows:
+
+```
+$ java -jar polyglot-2.0.0-SNAPSHOT.jar \
+    list_services_reflection \
+    --endpoint=localhost:50002 \
+    --use_tls=true \
+    --tls_ca_cert_path=/home/dl31jv/work/polyglot/src/main/java/me/dinowernli/grpc/polyglot/testing/test-certificates/ca.pem
+```
+
+
 ### Custom metadata
 
 It is possible to add custom grpc metadata to calls made using Polyglot by setting the `--metadata=key1:value1,key2:value2` flag.
@@ -157,27 +170,12 @@ Polyglot uses the `slf4j` logging framework with the `org.slf4j.impl.SimpleLogge
 In order to build Polyglot from source, you will need:
 
 * [Java 8](https://www.oracle.com/downloads/index.html)
-* [Bazel](http://bazel.io)
+* [Maven](https://maven.apache.org/)
 
 ## Building a binary
 
-`$ bazel build src/main/java/me/dinowernli/grpc/polyglot`
+`$ clean install -Dmaven.test.skip=true`
 
-After calling this, you should have a fresh binary at:
-
-`./bazel-bin/src/main/java/me/dinowernli/grpc/polyglot`
-
-If you would like to build a deployable (fat) jar, run:
-
-`$ bazel build src/main/java/me/dinowernli/grpc/polyglot:polyglot_deploy.jar`
-
-## Running the examples
-
-Example invocations can be found in the [examples](https://github.com/grpc-ecosystem/polyglot/tree/master/src/tools/example) directory. In order to run a simple rpc call, invoke [`run-server.sh`](https://github.com/grpc-ecosystem/polyglot/tree/master/src/tools/example/run-server.sh) followed by (in a different terminal) [`call-command-example.sh`](https://github.com/grpc-ecosystem/polyglot/tree/master/src/tools/example/call-command-example.sh).
-
-## Building and running tests
-
-`$ bazel test //src/...`
 
 ## Main contributors
 
