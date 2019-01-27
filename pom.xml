@@ -218,4 +218,22 @@
             </plugin>
         </plugins>
     </build>
+
+    <scm>
+        <developerConnection>scm:git:ssh://git@gitlab.ing.net:2222/ipagl/polyglot.git</developerConnection>
+        <tag>HEAD</tag>
+    </scm>
+
+    <distributionManagement>
+        <snapshotRepository>
+            <id>artifactory</id>
+            <name>Artifactory-snapshots</name>
+            <url>https://artifactory.ing.net/artifactory/snapshots_mvn_ipa</url>
+        </snapshotRepository>
+        <repository>
+            <id>artifactory</id>
+            <name>Artifactory-releases</name>
+            <url>https://artifactory.ing.net/artifactory/releases_mvn_ipa</url>
+        </repository>
+    </distributionManagement>
 </project>
