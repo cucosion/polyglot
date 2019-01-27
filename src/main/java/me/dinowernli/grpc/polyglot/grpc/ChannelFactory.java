@@ -28,13 +28,16 @@ import io.grpc.netty.NegotiationType;
 import io.grpc.netty.NettyChannelBuilder;
 import io.netty.handler.ssl.SslContext;
 import io.netty.handler.ssl.SslContextBuilder;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import polyglot.ConfigProto;
 
 import static com.google.common.util.concurrent.MoreExecutors.listeningDecorator;
 
 /** Knows how to construct grpc channels. */
 public class ChannelFactory {
-  private final ConfigProto.CallConfiguration callConfiguration;
+    private static final Logger logger = LoggerFactory.getLogger(ChannelFactory.class);
+    private final ConfigProto.CallConfiguration callConfiguration;
   private final ListeningExecutorService authExecutor;
 
   public static ChannelFactory create(ConfigProto.CallConfiguration callConfiguration) {
@@ -49,12 +52,20 @@ public class ChannelFactory {
     this.authExecutor = authExecutor;
   }
 
-  public Channel createChannel(HostAndPort endpoint) {
-    NettyChannelBuilder nettyChannelBuilder = createChannelBuilder(endpoint);
+    public Channel createChannel(HostAndPort endpoint) {
+        NettyChannelBuilder nettyChannelBuilder = createChannelBuilder(endpoint);
 
-    if (!callConfiguration.getTlsClientOverrideAuthority().isEmpty()) {
-      nettyChannelBuilder.overrideAuthority(callConfiguration.getTlsClientOverrideAuthority());
-    }
+        if (callConfiguration.getMaxMessageSize()!=0) {
+            nettyChannelBuilder.maxInboundMessageSize(callConfiguration.getMaxMessageSize());
+            logger.info("Max inbound message size is: " + callConfiguration.getMaxMessageSize());
+        }else {
+            logger.info("Max inbound message size is: " + 4194304);
+        }
+
+
+        if (!callConfiguration.getTlsClientOverrideAuthority().isEmpty()) {
+            nettyChannelBuilder.overrideAuthority(callConfiguration.getTlsClientOverrideAuthority());
+        }
 
     return nettyChannelBuilder.build();
   }

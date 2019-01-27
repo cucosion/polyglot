@@ -68,11 +68,14 @@ public class CommandLineArgs {
   public static final String CALL_COMMAND = "call";
   /** Command to list all known services defined in the proto files*/
   public static final String LIST_SERVICES_COMMAND = "list_services";
+  /** Command to list all known services by using server reflection*/
+  public static final String LIST_SERVICES_BY_REFLECTION_COMMAND = "list_services_reflection";
   /** Captures the command called */
   private String commandArg;
 
   private final CallCommand callCommand = new CallCommand();
   private final ListServicesCommand listServicesCommand = new ListServicesCommand();
+  private final ListServicesReflectionCommand listServicesReflectionCommand = new ListServicesReflectionCommand();
 
   @Parameters(separators = "= ", commandDescription = "Make a GRPC call to an endpoint")
   private class CallCommand {
@@ -120,6 +123,10 @@ public class CommandLineArgs {
       description ="<host>")
     private String tlsClientOverrideAuthority;
 
+    @Parameter(names = "--max_message_size",
+            description = "Maximum message size, the default is 4194304")
+    private Integer maxMessageSize;
+
   }
 
   @Parameters(separators = "= ", commandDescription = "List all known services defined in the proto files")
@@ -135,6 +142,41 @@ public class CommandLineArgs {
     @Parameter(names = "--with_message",
       description = "If true, then the message specification for the method is rendered")
     private String withMessageArg;
+  }
+
+  @Parameters(separators = "= ", commandDescription = "List all known services by using server reflection")
+  private class ListServicesReflectionCommand {
+    @Parameter(names = "--endpoint", required = true,
+            description ="Service endpoint to call: <host>:<port>",
+            order = 1)
+    private String endpointArg;
+
+    @Parameter(names = "--metadata",
+            description = "Metadata for this call in the form of key-value pairs: k1:v1,k2:v2,...",
+            order = 3)
+    private String metadataArg;
+
+    @Parameter(names = "--use_tls",
+            description ="Whether to use a secure TLS connection (see gRPC doc)",
+            order = 4)
+    private String useTlsArg;
+
+    @Parameter(names = "--tls_ca_cert_path",
+            description ="File to use as a root certificate for calls using TLS",
+            order = 5)
+    private String tlsCaCertPath;
+
+    @Parameter(names = "--tls_client_cert_path",
+            description ="If set, will use client certs for calls using TLS")
+    private String tlsClientCertPath;
+
+    @Parameter(names = "--tls_client_key_path",
+            description ="<path>")
+    private String tlsClientKeyPath;
+
+    @Parameter(names = "--tls_client_override_authority",
+            description ="<host>")
+    private String tlsClientOverrideAuthority;
   }
 
   /**
@@ -172,6 +214,7 @@ public class CommandLineArgs {
       .addObject(this)
       .addCommand(CALL_COMMAND, callCommand)
       .addCommand(LIST_SERVICES_COMMAND, listServicesCommand)
+      .addCommand(LIST_SERVICES_BY_REFLECTION_COMMAND, listServicesReflectionCommand)
       .build();
   }
 
@@ -284,9 +327,12 @@ public class CommandLineArgs {
     return Optional.of(builder.build());
   }
 
-  public Optional<Integer> getRpcDeadlineMs() {
-    return Optional.ofNullable(callCommand.deadlineMs);
+  public Optional<Integer> getRpcDeadlineMs() { return Optional.ofNullable(callCommand.deadlineMs); }
+
+  public Optional<Integer> getMaxMessageSize() {
+    return Optional.ofNullable(callCommand.maxMessageSize);
   }
+
 
   // **********************************************
   // * Flags supporting the list_services command *
@@ -322,5 +368,57 @@ public class CommandLineArgs {
       Preconditions.checkArgument(Files.exists(path), "File " + rawPath + " does not exist");
       return path;
     });
+  }
+
+  //All the variables that i need for get the full list of services provided by server refection
+  public Optional<ImmutableMultimap<String, String>> reflectionMetadata() {
+    if (listServicesReflectionCommand.metadataArg == null) {
+      return Optional.empty();
+    }
+    List<Map.Entry<String, String>> parts = Splitter.on(",")
+            .omitEmptyStrings()
+            .splitToList(listServicesReflectionCommand.metadataArg)
+            .stream()
+            .map(s -> {
+              String[] keyValue = s.split(":");
+              Preconditions.checkArgument(keyValue.length == 2,
+                      "Metadata entry must be defined in key:value format: " + listServicesReflectionCommand.metadataArg);
+              return Maps.immutableEntry(keyValue[0], keyValue[1]);
+            })
+            .collect(Collectors.toList());
+
+    ImmutableMultimap.Builder<String, String> builder = new ImmutableMultimap.Builder<>();
+    for (Map.Entry<String, String> keyValue : parts) {
+      builder.put(keyValue.getKey(), keyValue.getValue());
+    }
+    return Optional.of(builder.build());
+  }
+
+  /** Returns the endpoint string */
+  public Optional<String> reflectionEndpoint() {
+    return Optional.ofNullable(listServicesReflectionCommand.endpointArg);
+  }
+
+  public Optional<Boolean> reflectionUseTls() {
+    if (listServicesReflectionCommand.useTlsArg == null) {
+      return Optional.empty();
+    }
+    return Optional.of(Boolean.parseBoolean(listServicesReflectionCommand.useTlsArg));
+  }
+
+  public Optional<Path> reflectionTlsCaCertPath() {
+    return maybeInputPath(listServicesReflectionCommand.tlsCaCertPath);
+  }
+
+  public Optional<Path> reflectionTlsClientCertPath() {
+    return maybeInputPath(listServicesReflectionCommand.tlsClientCertPath);
+  }
+
+  public Optional<Path> reflectionTlsClientKeyPath() {
+    return maybeInputPath(listServicesReflectionCommand.tlsClientKeyPath);
+  }
+
+  public Optional<String> reflectionTlsClientOverrideAuthority() {
+    return Optional.ofNullable(listServicesReflectionCommand.tlsClientOverrideAuthority);
   }
 }

@@ -37,6 +37,10 @@ message CallConfiguration {
   // Entries will be appended to any existing metadata.
   // Entries whose name already exists as a metadata entry will have the value appended to the values list.
   repeated CallMetadataEntry metadata = 8;
+
+  //Maximum inbound message size
+  uint32 max_message_size = 9;
+
 }
 
 message CallMetadataEntry {

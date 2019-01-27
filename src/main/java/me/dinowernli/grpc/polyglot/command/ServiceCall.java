@@ -70,7 +70,7 @@ public class ServiceCall {
     }
 
     // Fetch the appropriate file descriptors for the service.
-    final FileDescriptorSet fileDescriptorSet;
+    Optional<FileDescriptorSet> fileDescriptorSet = Optional.empty();
     Optional<FileDescriptorSet> reflectionDescriptors = Optional.empty();
     if (protoConfig.getUseReflection()) {
       reflectionDescriptors =
@@ -79,18 +79,24 @@ public class ServiceCall {
 
     if (reflectionDescriptors.isPresent()) {
       logger.info("Using proto descriptors fetched by reflection");
-      fileDescriptorSet = reflectionDescriptors.get();
-    } else {
+      fileDescriptorSet = reflectionDescriptors;
+    } else if(!protoConfig.getUseReflection()){
       try {
-        fileDescriptorSet = ProtocInvoker.forConfig(protoConfig).invoke();
+        fileDescriptorSet = Optional.of(ProtocInvoker.forConfig(protoConfig).invoke());
         logger.info("Using proto descriptors obtained from protoc");
       } catch (Throwable t) {
         throw new RuntimeException("Unable to resolve service by invoking protoc", t);
       }
     }
 
+    if (!fileDescriptorSet.isPresent()){
+      logger.error("Unable to resolve service either the proto root is wrong or could not connect to remote server, " +
+              "check if you declared the proto root or enabled the reflection");
+      System.exit(-1);
+    }
+
     // Set up the dynamic client and make the call.
-    ServiceResolver serviceResolver = ServiceResolver.fromFileDescriptorSet(fileDescriptorSet);
+    ServiceResolver serviceResolver = ServiceResolver.fromFileDescriptorSet(fileDescriptorSet.get());
     MethodDescriptor methodDescriptor = serviceResolver.resolveServiceMethod(grpcMethodName);
 
     logger.info("Creating dynamic grpc client");
@@ -111,6 +117,8 @@ public class ServiceCall {
       dynamicClient.call(requestMessages, streamObserver, callOptions(callConfig)).get();
     } catch (Throwable t) {
       throw new RuntimeException("Caught exception while waiting for rpc", t);
+//      logger.warn("Caught exception while waiting for rpc. "+t.getMessage());
+//      System.exit(-1);
     }
   }
 
@@ -131,9 +139,12 @@ public class ServiceCall {
       Throwable root = Throwables.getRootCause(t);
       if (root instanceof StatusRuntimeException) {
         if (((StatusRuntimeException) root).getStatus().getCode() == Status.Code.UNIMPLEMENTED) {
-          logger.warn("Could not list services because the remote host does not support " +
+          logger.error("Could not list services because the remote host does not support " +
               "reflection. To disable resolving services by reflection, either pass the flag " +
               "--use_reflection=false or disable reflection in your config file.");
+        } else {
+          logger.error("You have some issues with the connection. When trying to get the service description through reflection, check the security(tls) .."+root.getMessage());
+          System.exit(-1);
         }
       }
 

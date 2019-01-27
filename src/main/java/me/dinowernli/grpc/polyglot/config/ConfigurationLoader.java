@@ -126,6 +126,9 @@ public class ConfigurationLoader {
     overrides.getRpcDeadlineMs().ifPresent(
         resultBuilder.getCallConfigBuilder()::setDeadlineMs);
 
+    overrides.getMaxMessageSize().ifPresent(
+            resultBuilder.getCallConfigBuilder()::setMaxMessageSize);
+
     overrides.tlsCaCertPath().ifPresent(
         path -> resultBuilder.getCallConfigBuilder().setTlsCaCertPath(path.toString()));
 
@@ -144,6 +147,30 @@ public class ConfigurationLoader {
             .setName(keyValue.getKey())
             .setValue(keyValue.getValue())
             .build();
+      }
+    });
+
+    //set the tls and jaas for reflection service
+    overrides.reflectionUseTls().ifPresent(resultBuilder.getCallConfigBuilder()::setUseTls);
+
+    overrides.reflectionTlsCaCertPath().ifPresent(
+            path -> resultBuilder.getCallConfigBuilder().setTlsCaCertPath(path.toString()));
+
+    overrides.reflectionTlsClientCertPath().ifPresent(
+            path -> resultBuilder.getCallConfigBuilder().setTlsClientCertPath(path.toString()));
+
+    overrides.reflectionTlsClientKeyPath().ifPresent(
+            path -> resultBuilder.getCallConfigBuilder().setTlsClientKeyPath(path.toString()));
+
+    overrides.reflectionTlsClientOverrideAuthority()
+            .ifPresent(resultBuilder.getCallConfigBuilder()::setTlsClientOverrideAuthority);
+
+    overrides.reflectionMetadata().ifPresent(metadata -> {
+      for (Map.Entry<String, String> keyValue : metadata.entries().asList()) {
+        resultBuilder.getCallConfigBuilder().addMetadataBuilder()
+                .setName(keyValue.getKey())
+                .setValue(keyValue.getValue())
+                .build();
       }
     });
 

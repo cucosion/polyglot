@@ -16,7 +16,7 @@ public class ProtocInvokerTest {
       Paths.get(TestUtils.TESTING_PROTO_ROOT.toString(), "protobuf");
 
   @Test
-  public void handlesStandaloneProtoFileWithoutImports() throws Throwable {
+  public void andlesStandaloneProtoFileWithoutImports() throws Throwable {
     ProtocInvoker invoker = ProtocInvoker.forConfig(ProtoConfiguration.newBuilder()
         .setProtoDiscoveryRoot(TEST_PROTO_FILES.toString())
         .build());

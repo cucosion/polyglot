@@ -6,11 +6,16 @@ option java_outer_classname = "TestProto";
 
 import "google/protobuf/any.proto";
 import "google/protobuf/duration.proto";
-import "testing/foo/foo.proto";
+//import "testing/foo/foo.proto";
+//import "src/main/proto/testing/foo/foo.proto";
+
+message Foo {
+    string message = 1;
+}
 
 message TestRequest {
   string message = 1;
-  foo.Foo foo = 2;
+  Foo foo = 2;
   int32 number = 3;
 }
 

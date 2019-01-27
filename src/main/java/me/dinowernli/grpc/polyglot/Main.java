@@ -5,6 +5,7 @@ import java.util.logging.LogManager;
 import com.google.protobuf.DescriptorProtos.FileDescriptorSet;
 import me.dinowernli.grpc.polyglot.command.ServiceCall;
 import me.dinowernli.grpc.polyglot.command.ServiceList;
+import me.dinowernli.grpc.polyglot.command.ServiceReflectionList;
 import me.dinowernli.grpc.polyglot.config.CommandLineArgs;
 import me.dinowernli.grpc.polyglot.config.ConfigurationLoader;
 import me.dinowernli.grpc.polyglot.io.Output;
@@ -57,6 +58,13 @@ public class Main {
               commandLineOutput,
               fileDescriptorSet, config.getProtoConfig().getProtoDiscoveryRoot(),
               arguments.serviceFilter(), arguments.methodFilter(), arguments.withMessage());
+          break;
+
+        case CommandLineArgs.LIST_SERVICES_BY_REFLECTION_COMMAND:
+          ServiceReflectionList.callEndpoint(
+                  commandLineOutput,
+                  arguments.reflectionEndpoint(),
+                  config.getCallConfig());
           break;
 
         case CommandLineArgs.CALL_COMMAND:
