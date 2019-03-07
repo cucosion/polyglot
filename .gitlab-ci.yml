@@ -1,0 +1,16 @@
+fortify:
+  tags:
+  - fortify
+  script: "sudo -u runner /opt/gitlab-scripts/runFortifyScan.sh --server fortify3 --project polyglot"
+  only:
+  - master
+  - develop
+  - tags
+owasp:
+  tags:
+  - owasp
+  script: "sudo -u runner /opt/gitlab-scripts/runOwaspScan.sh"
+  only:
+  - master
+  - develop
+  - tags
