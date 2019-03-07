@@ -1,7 +1,7 @@
 fortify:
   tags:
   - fortify
-  script: "sudo -u runner /opt/gitlab-scripts/runFortifyScan.sh --server fortify3 --project polyglot"
+  script: "sudo -u runner /opt/gitlab-scripts/runFortifyScan.sh --server fortify2 --project polyglot"
   only:
   - master
   - develop
