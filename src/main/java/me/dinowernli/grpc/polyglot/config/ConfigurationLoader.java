@@ -1,5 +1,13 @@
 package me.dinowernli.grpc.polyglot.config;
 
+import com.google.common.annotations.VisibleForTesting;
+import com.google.common.base.Joiner;
+import com.google.common.base.Preconditions;
+import com.google.protobuf.util.JsonFormat;
+import polyglot.ConfigProto.Configuration;
+import polyglot.ConfigProto.ConfigurationSet;
+import polyglot.ConfigProto.OutputConfiguration.Destination;
+
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
@@ -7,15 +15,6 @@ import java.nio.file.Paths;
 import java.util.Map;
 import java.util.Optional;
 import java.util.stream.Collectors;
-
-import com.google.common.annotations.VisibleForTesting;
-import com.google.common.base.Joiner;
-import com.google.common.base.Preconditions;
-import com.google.protobuf.util.JsonFormat;
-
-import polyglot.ConfigProto.Configuration;
-import polyglot.ConfigProto.ConfigurationSet;
-import polyglot.ConfigProto.OutputConfiguration.Destination;
 
 /** A utility which manipulating and reading a single {@link ConfigurationSet}. */
 public class ConfigurationLoader {

@@ -1,27 +1,11 @@
 package me.dinowernli.grpc.polyglot.grpc;
 
-import java.io.File;
-import java.nio.file.Files;
-import java.nio.file.Path;
-import java.nio.file.Paths;
-import java.security.NoSuchAlgorithmException;
-import java.security.spec.InvalidKeySpecException;
-import java.util.concurrent.Executors;
-
-import javax.net.ssl.SSLException;
-
 import com.google.auth.Credentials;
 import com.google.common.base.Preconditions;
 import com.google.common.net.HostAndPort;
 import com.google.common.util.concurrent.ListeningExecutorService;
 import com.google.common.util.concurrent.ThreadFactoryBuilder;
-import io.grpc.CallOptions;
-import io.grpc.Channel;
-import io.grpc.ClientCall;
-import io.grpc.ClientInterceptor;
-import io.grpc.ClientInterceptors;
-import io.grpc.Metadata;
-import io.grpc.StatusException;
+import io.grpc.*;
 import io.grpc.auth.ClientAuthInterceptor;
 import io.grpc.netty.GrpcSslContexts;
 import io.grpc.netty.NegotiationType;
@@ -31,6 +15,15 @@ import io.netty.handler.ssl.SslContextBuilder;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import polyglot.ConfigProto;
+
+import javax.net.ssl.SSLException;
+import java.io.File;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.Paths;
+import java.security.NoSuchAlgorithmException;
+import java.security.spec.InvalidKeySpecException;
+import java.util.concurrent.Executors;
 
 import static com.google.common.util.concurrent.MoreExecutors.listeningDecorator;
 
@@ -77,11 +70,11 @@ public class ChannelFactory {
 
   private NettyChannelBuilder createChannelBuilder(HostAndPort endpoint) {
     if (!callConfiguration.getUseTls()) {
-      return NettyChannelBuilder.forAddress(endpoint.getHostText(), endpoint.getPort())
+      return NettyChannelBuilder.forAddress(endpoint.getHost(), endpoint.getPort())
           .negotiationType(NegotiationType.PLAINTEXT)
           .intercept(metadataInterceptor());
     } else {
-      return NettyChannelBuilder.forAddress(endpoint.getHostText(), endpoint.getPort())
+      return NettyChannelBuilder.forAddress(endpoint.getHost(), endpoint.getPort())
           .sslContext(createSslContext())
           .negotiationType(NegotiationType.TLS)
           .intercept(metadataInterceptor());
